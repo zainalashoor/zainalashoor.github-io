@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Question For You 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #ff003c;
+    --deep: #c2607a;
+    --blush: #fce8ed;
+    --text: #3a1a22;
+    --white: #fff9fb;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--blush);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Floating hearts background */
+  .hearts-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .heart-float {
+    position: absolute;
+    font-size: 1.4rem;
+    opacity: 0.15;
+    animation: floatUp linear infinite;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.15; }
+    90%  { opacity: 0.15; }
+    100% { transform: translateY(-10vh) rotate(20deg); opacity: 0; }
+  }
+
+  /* Card */
+  .card {
+    position: relative;
+    z-index: 1;
+    background: var(--white);
+    border-radius: 28px;
+    padding: 48px 36px 40px;
+    max-width: 360px;
+    width: 90vw;
+    text-align: center;
+    box-shadow:
+      0 4px 24px rgba(194,96,122,0.13),
+      0 1px 4px rgba(194,96,122,0.08);
+    animation: cardIn 0.6s cubic-bezier(.34,1.56,.64,1) both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .emoji-big {
+    font-size: 3.8rem;
+    display: block;
+    margin-bottom: 20px;
+    animation: bounce 1.8s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  h1 em {
+    color: var(--deep);
+    font-style: italic;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #a0617a;
+    margin-bottom: 36px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .btn {
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    transition: transform 0.15s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active { transform: scale(0.95) !important; }
+
+  .btn-yes {
+    background: linear-gradient(135deg, var(--deep), #e8748a);
+    color: #fff;
+    padding: 14px 36px;
+    font-size: 1.05rem;
+    box-shadow: 0 4px 16px rgba(194,96,122,0.35);
+  }
+  .btn-yes:hover { transform: scale(1.06); box-shadow: 0 6px 22px rgba(194,96,122,0.45); }
+
+  .btn-no {
+  background: linear-gradient(135deg, var(--deep), #1f1315);
+   color: #b07a8a;
+   padding: 14px 28px;
+   font-size: 1rem;
+   border: 1.5px solid #e2b4be;
+   position: absolute;
+ }
+
+  /* Yes screen */
+  .yes-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+  .yes-screen.show { display: flex; animation: cardIn 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+
+  .yes-screen .emoji-big { animation: spin 0.7s cubic-bezier(.34,1.56,.64,1) both, bounce 1.8s 0.7s ease-in-out infinite; }
+  @keyframes spin {
+    from { transform: rotate(-180deg) scale(0); }
+    to   { transform: rotate(0deg) scale(1); }
+  }
+
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 99;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Wiggle animation for growing Yes button */
+  @keyframes wiggle {
+    0%,100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-4deg); }
+    75%      { transform: rotate(4deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="card" id="mainCard">
+  <div id="askView">
+    <span class="emoji-big" id="mainEmoji">🌸</span>
+    <h1 id="mainTitle">Will you spend the entire weekend (19th-21st) with me?</h1>
+    <p class="subtitle" id="subText">I promise it'll be worth it ✨</p>
+    <div class="buttons" id="buttonsArea">
+      <button class="btn btn-yes" id="yesBtn" onclick="sayYes()">Yes! 🥰</button>
+    </div>
+      <button class="btn btn-no"  id="noBtn"  onclick="pressNo()">No</button>
+    </div>
+
+  <div class="yes-screen" id="yesView">
+    <span class="emoji-big">💖</span>
+    <h1>Yay!! <em>It's a date!</em></h1>
+    <p class="subtitle">I can't wait 🎉</p>
+  </div>
+</div>
+
+<script>
+  // --- Floating hearts background ---
+  const bg = document.getElementById('heartsBg');
+  const heartEmojis = ['🌸','💕','💗','🌷','✨','💝','🫶'];
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart-float';
+    h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (0.9 + Math.random() * 1.4) + 'rem';
+    h.style.animationDuration = (7 + Math.random() * 10) + 's';
+    h.style.animationDelay   = (-Math.random() * 14) + 's';
+    bg.appendChild(h);
+  }
+
+  // --- No button logic ---
+  const noMessages = [
+    "Are you sure? 🥺", "Pretty please?", "I'll be really fun, promise!",
+    "Think about it…", "Just say yes 💌", "My heart is breaking 💔",
+    "One more chance?", "I won't give up 🌹", "Last chance… maybe 👀",
+    "Ok fine… just kidding, YES!", "c'moooon 🐾", "You know you want to 🫣"
+  ];
+  const noEmojis    = ['🥺','😢','😭','🥹','😩','💔','🙏','😅','😬','🤞','😤','🫠'];
+  const noSubtexts  = [
+    "I know you want to say yes!", "Come on, take a chance 🌟",
+    "Rethink this decision…", "Your heart is saying yes 💓",
+    "I triple-dog dare you.", "This button isn't working right 👀",
+    "Try the other button 😇", "I'll keep asking forever 🔁",
+    "We'd have so much fun!", "The yes button is right there →",
+    "Every no makes me try harder 💪", "Resistance is futile 💘"
+  ];
+
+  let noCount = 0;
+  let yesBtnScale = 1;
+
+  const noBtn      = document.getElementById('noBtn');
+  const yesBtn     = document.getElementById('yesBtn');
+  const mainTitle  = document.getElementById('mainTitle');
+  const subText    = document.getElementById('subText');
+  const mainEmoji  = document.getElementById('mainEmoji');
+  const buttonsArea = document.getElementById('buttonsArea');
+
+  function pressNo() {
+    noCount++;
+    const idx = Math.min(noCount - 1, noMessages.length - 1);
+
+    // Update text
+    mainTitle.innerHTML = noMessages[idx].replace(/([a-z])(yes)/gi, '$1<em>$2</em>').replace(/^(yes)/gi, '<em>$1</em>');
+    mainTitle.textContent = noMessages[idx];
+    subText.textContent   = noSubtexts[idx % noSubtexts.length];
+    mainEmoji.textContent = noEmojis[idx % noEmojis.length];
+
+    // Grow yes button
+    yesBtnScale = Math.min(yesBtnScale + 0.18, 2.2);
+    yesBtn.style.transform = `scale(${yesBtnScale})`;
+    yesBtn.style.animation = 'wiggle 0.4s ease';
+    setTimeout(() => yesBtn.style.animation = '', 400);
+
+    // Shrink no button
+    const noScale = Math.max(1 - noCount * 0.08, 0.3);
+    noBtn.style.transform = `scale(${noScale})`;
+    noBtn.style.opacity   = Math.max(1 - noCount * 0.07, 0.2);
+
+   // Teleport no button within card bounds
+   const card = document.getElementById('mainCard');
+   const maxX = card.offsetWidth  - noBtn.offsetWidth  - 10;
+   const maxY = card.offsetHeight - noBtn.offsetHeight - 10;
+   noBtn.style.left = Math.random() * maxX + 'px';
+   noBtn.style.top  = Math.random() * maxY + 'px';
+  }
+
+  // --- Say yes ---
+  function sayYes() {
+    document.getElementById('askView').style.display = 'none';
+    const yesView = document.getElementById('yesView');
+    yesView.classList.add('show');
+    spawnConfetti();
+  }
+
+  function spawnConfetti() {
+    const colors = ['#f2a7b8','#c2607a','#ffd6e0','#ff8fab','#ffb3c6','#ffc8dd','#ffe4ec'];
+    for (let i = 0; i < 80; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left            = Math.random() * 100 + 'vw';
+        c.style.top             = '-20px';
+        c.style.background      = colors[Math.floor(Math.random() * colors.length)];
+        c.style.width           = (6 + Math.random() * 8) + 'px';
+        c.style.height          = (6 + Math.random() * 8) + 'px';
+        c.style.borderRadius    = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3500);
+      }, i * 30);
+    }
+  }
+</script>
+</body>
+</html>
